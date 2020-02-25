@@ -7,13 +7,13 @@ This action provides next semver tag (prerelease or patch).
 Next prerelease version:
 ```yaml
       - uses: Drill4J/semver-tag-action@v0.1.0
-          with:
-            type: prerelease
+        with:
+          type: prerelease
 ```
 
 Next patch version:
 ```yaml
       - uses: Drill4J/semver-tag-action@v0.1.0
-          with:
-            type: prerelease
+        with:
+          type: prerelease
 ```
