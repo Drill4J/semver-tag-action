@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-const github = require('@actions/core');
 const exec = require('@actions/exec');
 const semver = require('@drill4j/semver');
 
@@ -24,10 +23,10 @@ async function run() {
                 core.info(`Tag - ${version.toString()}`);
                 core.setOutput('tag', tag);
             } else {
-                core.setFailed("No version tag found for patch tagging type");
+                core.setFailed("No version tag found for patch tagging type.");
             }
         } else {
-            core.setFailed(`Incorrect tagging type ${type}. Allowed values: "prerelease", "patch"`);
+            core.setFailed(`Incorrect tagging type ${type}. Allowed values: "prerelease", "patch".`);
         }
     }
     catch (error) {

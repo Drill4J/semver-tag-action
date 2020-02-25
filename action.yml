@@ -1,9 +1,7 @@
 name: SemVer tagger
-description: Tag commit with the next semver 
+description: Provides next semver tag (prerelease or patch)
 author: Drill4j
 inputs: 
-  repo-token:
-    description: github access token secret
   type:
     description:  prerelease | patch
     default: prerelease
