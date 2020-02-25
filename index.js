@@ -12,16 +12,12 @@ async function run() {
         if (type === "prerelease") {
             const describe = await gitDescribe();
             const version = describe !== '' ? semver.prereleaseFromGit(describe) : DEFAULT_PRERELEASE_VERSION;
-            const tag = `v${version.toString()}`
-            core.info(`Tag - ${version.toString()}`);
-            core.setOutput('tag', tag);
+            setTagOutput(version)
         } else if (type === "patch") {
             const describe = await gitDescribe()
             if (describe !== '') {
                 const version = semver.patchFromGit(describe);
-                const tag = `v${version.toString()}`
-                core.info(`Tag - ${version.toString()}`);
-                core.setOutput('tag', tag);
+                setTagOutput(version)
             } else {
                 core.setFailed("No version tag found for patch tagging type.");
             }
@@ -51,6 +47,12 @@ async function gitDescribe() {
     ];
     await exec.exec('git', args, options);
     return myOutput.trim();
+}
+
+function setTagOutput(version) {
+    const tag = `v${version.toString()}`
+    core.info(`Tag - ${tag}`);
+    core.setOutput('tag', tag);
 }
 
 run();
