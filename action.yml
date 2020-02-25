@@ -1,0 +1,15 @@
+name: SemVer tagger
+description: Tag commit with the next semver 
+author: Drill4j
+inputs: 
+  github-token:
+    description: GITHUB_TOKEN secret
+  type:
+    description:  prerelease | patch
+    default: prerelease
+outputs:
+  tag:
+    description: tag
+runs:
+  using: 'node12'
+  main: index.js
