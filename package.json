@@ -2,12 +2,15 @@
   "name": "semver-tag-action",
   "version": "0.1.0",
   "description": "",
+  "author": "Drill4j",
+  "license": "Apache-2.0",
   "main": "index.js",
   "dependencies": {
     "@actions/core": "^1.2.2",
     "@actions/github": "^2.1.1",
     "@drill4j/semver": "0.4.0"
   },
-  "author": "Drill4j",
-  "license": "Apache-2.0"
+  "scripts": {
+    "build": "yarn install"
+  }
 }
