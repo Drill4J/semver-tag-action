@@ -3,24 +3,23 @@ const github = require('@actions/core');
 const exec = require('@actions/exec');
 const semver = require('@drill4j/semver');
 
-const DEFAULT_PRERELEASE_VERSION = semver.parse("0.1.0-0")
+const DEFAULT_PRERELEASE_VERSION = semver.parse("0.1.0-0");
 
 async function run() {
     try {
         const type = core.getInput('type');
-        core.info(`Tagging type - ${type}`)
+        core.info(`Tagging type - ${type}`);
         const token = core.getInput('repo-token');
         if (type === "prerelease") {
-            const describe = await gitDescribe()
+            const describe = await gitDescribe();
             const version = describe !== '' ? semver.prereleaseFromGit(describe) : DEFAULT_PRERELEASE_VERSION;
-            core.info(`Version - ${version.toString()}`)
-            const client = new github.GitHub(token);
+            core.info(`Version - ${version.toString()}`);
             core.setOutput('tag', version.toString());
         } else if (type === "patch") {
             const describe = await gitDescribe()
             if (describe !== '') {
                 const version = semver.patchFromGit(describe);
-                core.info(`Version - ${version.toString()}`)
+                core.info(`Version - ${version.toString()}`);
                 core.setOutput('tag', version.toString());
             } else {
                 core.setFailed("No version tag found for patch tagging type");
@@ -48,9 +47,9 @@ async function gitDescribe() {
         'describe',
         '--tags', '--long',
         '--match', 'v[0-9]*.[0-9]*.[0-9]*'
-    ]
+    ];
     await exec.exec('git', args, options);
-    return myOutput
+    return myOutput.trim();
 }
 
 run()
