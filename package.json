@@ -13,7 +13,7 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "@actions/core": "^1.2.2",
+    "@actions/core": "^1.9.1",
     "@actions/exec": "^1.0.3",
     "@drill4j/semver": "0.4.0"
   },
