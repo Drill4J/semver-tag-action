@@ -1,40 +1,39 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
-const semver = require('@drill4j/semver');
-
-const DEFAULT_PRERELEASE_VERSION = semver.parse("0.1.0-0");
+const semver = require('semver');
 
 async function run() {
     try {
         const type = core.getInput('type');
-        core.info(`Tagging type - ${type}`);
-        if (type === "prerelease") {
-            const describe = await gitDescribe();
-            const version = describe !== '' ? semver.prereleaseFromGit(describe) : DEFAULT_PRERELEASE_VERSION;
-            setTagOutput(version);
-        } else if (type === "patch") {
-            const describe = await gitDescribe()
-            if (describe !== '') {
-                const version = semver.patchFromGit(describe);
-                setTagOutput(version);
-            } else {
-                core.setFailed("No version tag found for patch tagging type.");
+        core.info(`Tag type: ${type}`);
+        const describe = await execGitDescribe();
+        core.info(`Git describe result: ${describe}`);
+        if (describe !== '') {
+            const verOld = describe.substring(1).replace(/-[0-9]+-g[0-9a-f]+$/g, '');
+            if ((type === 'major' || type === 'minor' || type === 'patch') && verOld.match(/^[0-9]+.[0-9]+.[0-9]+$/) === null) {
+                core.setFailed(`Incorrect version ${verOld} for tag type ${type}`);
             }
+            if (type === 'prerelease' && verOld.match(/^[0-9]+.[0-9]+.[0-9]+-[a-z]+\.[0-9]+$/) === null) {
+                core.setFailed(`Incorrect version ${verOld} for tag type ${type}`);
+            }
+            const verNew = semver.inc(verOld, type);
+            const tag = `v${verNew.toString()}`;
+            core.info(`Tag increment: ${tag}`);
+            core.setOutput('tag', tag);
         } else {
-            core.setFailed(`Incorrect tagging type ${type}. Allowed values: "prerelease", "patch".`);
+            core.setFailed('No version tag found');
         }
-    }
-    catch (error) {
+    } catch (error) {
         core.setFailed(error.message);
     }
 }
 
-async function gitDescribe() {
-    let myOutput = '';
+async function execGitDescribe() {
+    let output = '';
     const options = {
         listeners: {
             stdout: (data) => {
-                myOutput += data.toString();
+                output += data.toString();
             }
         },
         ignoreReturnCode: true
@@ -45,13 +44,7 @@ async function gitDescribe() {
         '--match', 'v[0-9]*.[0-9]*.[0-9]*'
     ];
     await exec.exec('git', args, options);
-    return myOutput.trim();
-}
-
-function setTagOutput(version) {
-    const tag = `v${version.toString()}`
-    core.info(`Tag - ${tag}`);
-    core.setOutput('tag', tag);
+    return output.trim();
 }
 
 run();
