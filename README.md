@@ -1,4 +1,4 @@
-# SemVer Tag Action
+# Drill4J Internal - SemVer Tag Action
 
 This action provides next semver tag (prerelease or patch).
 
